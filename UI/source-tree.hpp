@@ -13,6 +13,7 @@
 #include <obs-frontend-api.h>
 
 class QLabel;
+class OBSSourceLabel;
 class QCheckBox;
 class QLineEdit;
 class SourceTree;
@@ -57,7 +58,7 @@ private:
 	QCheckBox *vis = nullptr;
 	QCheckBox *lock = nullptr;
 	QHBoxLayout *boxLayout = nullptr;
-	QLabel *label = nullptr;
+	OBSSourceLabel *label = nullptr;
 
 	QLineEdit *editor = nullptr;
 
@@ -79,7 +80,6 @@ private slots:
 
 	void VisibilityChanged(bool visible);
 	void LockedChanged(bool locked);
-	void Renamed(const QString &name);
 
 	void ExpandClicked(bool checked);
 
@@ -120,8 +120,7 @@ public:
 	explicit SourceTreeModel(SourceTree *st);
 
 	virtual int rowCount(const QModelIndex &parent) const override;
-	virtual QVariant data(const QModelIndex &index,
-			      int role) const override;
+	virtual QVariant data(const QModelIndex &index, int role) const override;
 
 	virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
 	virtual Qt::DropActions supportedDropActions() const override;
@@ -149,10 +148,7 @@ class SourceTree : public QListView {
 	void UpdateWidget(const QModelIndex &idx, obs_sceneitem_t *item);
 	void UpdateWidgets(bool force = false);
 
-	inline SourceTreeModel *GetStm() const
-	{
-		return reinterpret_cast<SourceTreeModel *>(model());
-	}
+	inline SourceTreeModel *GetStm() const { return reinterpret_cast<SourceTreeModel *>(model()); }
 
 public:
 	inline SourceTreeItem *GetItemWidget(int idx)
@@ -194,9 +190,7 @@ protected:
 	virtual void dropEvent(QDropEvent *event) override;
 	virtual void paintEvent(QPaintEvent *event) override;
 
-	virtual void
-	selectionChanged(const QItemSelection &selected,
-			 const QItemSelection &deselected) override;
+	virtual void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected) override;
 };
 
 class SourceTreeDelegate : public QStyledItemDelegate {
@@ -204,6 +198,5 @@ class SourceTreeDelegate : public QStyledItemDelegate {
 
 public:
 	SourceTreeDelegate(QObject *parent);
-	virtual QSize sizeHint(const QStyleOptionViewItem &option,
-			       const QModelIndex &index) const override;
+	virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
